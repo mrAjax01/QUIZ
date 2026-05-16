@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quiz-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quiz-app
+  template:
+    metadata:
+      labels:
+        app: quiz-app
+    spec:
+      containers:
+        - name: quiz-app
+          image: quiz-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: APP_ENV
+              value: "production"
+            - name: APP_DEBUG
+              value: "false"
+            - name: APP_KEY
+              value: "base64:7u6rXbW1hUkhSSTZsbXNreXp1YnhjdmJuMTIzNDU2Nzg="
+            - name: DB_CONNECTION
+              value: "mysql"
+            - name: DB_HOST
+              value: "mariadb"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_DATABASE
+              value: "quiz_db"
+            - name: DB_USERNAME
+              value: "quiz_user"
+            - name: DB_PASSWORD
+              value: "quiz_user_pass"
+            - name: CACHE_STORE
+              value: "redis"
+            - name: QUEUE_CONNECTION
+              value: "redis"
+            - name: REDIS_HOST
+              value: "redis"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quiz-app-service
+  namespace: default
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: quiz-app
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: quiz-app-ingress
+  namespace: default
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - host: quiz.kube.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: quiz-app-service
+                port:
+                  number: 80
