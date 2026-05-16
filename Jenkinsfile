@@ -36,6 +36,8 @@ pipeline {
                 echo 'wait for pod'
                 sh 'kubectl rollout status deployment/quiz-app --timeout=60s'
 
+		sh 'sleep 5'
+
                 echo 'start migrations in pod'
                 sh '''
                     POD_NAME=$(kubectl get pods -l app=quiz-app -o jsonpath="{.items[0].metadata.name}")
