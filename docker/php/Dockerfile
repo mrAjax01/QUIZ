@@ -12,9 +12,8 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
-ADD https://github.com /usr/local/bin/
-
-RUN chmod +x /usr/local/bin/install-php-extensions && \
+RUN curl -sSL https://github.com -o /usr/local/bin/install-php-extensions && \
+    chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions pdo_mysql bcmath gd zip redis
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
