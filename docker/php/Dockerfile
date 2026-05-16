@@ -31,6 +31,7 @@ RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 COPY ./docker/nginx/app.conf /etc/nginx/http.d/default.conf
 COPY ./docker/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./docker/php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 
 RUN chown -R www-data:www-data /var/www/quiz/storage /var/www/quiz/bootstrap/cache
 
