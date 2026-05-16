@@ -12,7 +12,7 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
-RUN curl -sSL https://github.com -o /usr/local/bin/install-php-extensions && \
+RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer -o /usr/local/bin/install-php-extensions && \
     chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions pdo_mysql bcmath gd zip redis
 
