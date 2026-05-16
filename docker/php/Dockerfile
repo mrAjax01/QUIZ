@@ -12,7 +12,7 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
-RUN docker-php-ext-install pdo_mysql bcmath gd zip opcache
+RUN docker-php-ext-install pdo_mysql bcmath gd zip
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
