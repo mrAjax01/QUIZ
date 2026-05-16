@@ -30,21 +30,6 @@ pipeline {
                 sh 'kubectl rollout restart deployment/quiz-app'
             }
         }
-
-        stage('4. Laravel migrations') {
-            steps {
-                echo 'wait for pod'
-                sh 'kubectl rollout status deployment/quiz-app --timeout=60s'
-
-		sh 'sleep 5'
-
-                echo 'start migrations in pod'
-                sh '''
-                    POD_NAME=$(kubectl get pods -l app=quiz-app -o jsonpath="{.items[0].metadata.name}")
-                    kubectl exec $POD_NAME -- php artisan migrate --force
-                '''
-            }
-        }
     }
 
     post {

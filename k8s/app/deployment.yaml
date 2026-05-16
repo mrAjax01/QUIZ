@@ -17,6 +17,12 @@ spec:
         - name: quiz-app
           image: quiz-app:latest
           imagePullPolicy: IfNotPresent
+	  command: ["/bin/sh", "-c"]
+	  args:
+	    - |
+	      php artisan migrate --force
+	      exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisor.conf
+
           ports:
             - containerPort: 80
           env:
