@@ -1,11 +1,3 @@
-FROM node:20-alpine AS frontend-builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-
-RUN npm run build
-
 FROM php:8.5-fpm-alpine
 
 RUN apk add --no-cache \
@@ -16,7 +8,9 @@ RUN apk add --no-cache \
     libzip-dev \
     zip \
     unzip \
-    git
+    git \
+    nodejs \
+    npm
 
 RUN docker-php-ext-install pdo_mysql bcmath gd zip opcache
 
@@ -24,9 +18,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/quiz
 
+COPY package*.json composer*.json ./
+
+RUN composer install --no-interaction --no-scripts --no-dev
+RUN npm install
+
 COPY . .
 
-COPY --from=frontend-builder /app/public/build ./public/build
+RUN npm run build
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
