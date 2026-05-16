@@ -12,7 +12,10 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
-RUN docker-php-ext-install pdo_mysql bcmath gd zip
+ADD https://github.com /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions pdo_mysql bcmath gd zip redis
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
